@@ -1,6 +1,7 @@
 package br.com.android.google.carros.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,9 +14,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import br.com.android.google.carros.R;
+import br.com.android.google.carros.activity.CarroActivity;
 import br.com.android.google.carros.adapter.CarroAdapter;
 import br.com.android.google.carros.domain.Carro;
 import br.com.android.google.carros.domain.CarroService;
@@ -54,7 +58,6 @@ public class CarrosFragment extends BaseFragment {
 
         View view = inflater.inflate(R.layout.fragment_carros, container, false);
 
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -83,9 +86,14 @@ public class CarrosFragment extends BaseFragment {
         return new CarroAdapter.CarroOnClickListener() {
             @Override
             public void onClickCarro(View view, int idx) {
+                //Toast.makeText(getContext(), "Carro: " + c.nome, Toast.LENGTH_SHORT).show();
                 Carro c = mCarros.get(idx);
-                Toast.makeText(getContext(), "Carro: " + c.nome, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), CarroActivity.class);
+                intent.putExtra("carro", Parcels.wrap(c));// Converte o objeto para Parcelable
+                startActivity(intent);
             }
         };
     }
+
+
 }
