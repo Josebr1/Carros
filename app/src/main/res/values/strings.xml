@@ -20,15 +20,23 @@ Versao %s<br><br>
     <string name="configuracoes">Configurações</string>
     <string name="classicos">Clássicos</string>
 
+    <!-- D -->
+    <string name="descricao">Descrição</string>
+
     <!-- E -->
     <string name="esportivos">Esportivos</string>
 
     <!-- L -->
     <string name="luxo">Luxo</string>
+    <string name="latitudeLongitude">Lat / Lng</string>
+
+    <!-- M -->
+    <string name="mapa">Mapa</string>
 
     <!-- N -->
-    <string name="nav_drawer_username">José Antônio</string>
-    <string name="nav_drawer_email">jose.silva.br@outlook.com</string>
+    <string name="nav_drawer_username">Ricardo Lecheta</string>
+    <string name="nav_drawer_email">rlecheta@gmail.com</string>
+    <string name="nome">Nome</string>
 
     <!-- O -->
     <string name="ok">OK</string>
@@ -39,12 +47,6 @@ Versao %s<br><br>
 
     <!-- V -->
     <string name="vazio" />
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_carro">Carro</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_teste">TesteActivity</string>
+    <string name="video">Vídeo</string>
 
 </resources>
