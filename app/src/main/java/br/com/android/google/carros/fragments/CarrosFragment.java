@@ -63,22 +63,8 @@ public class CarrosFragment extends BaseFragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
-       /* TextView text = (TextView)view.findViewById(R.id.text);
-        text.setText("Carros " + getString(tipo));*/
-
-        // FAB
-        view.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                snack(mRecyclerView, "Exemplo de FAB Button");
-            }
-        });
-
         return view;
     }
-
-
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {

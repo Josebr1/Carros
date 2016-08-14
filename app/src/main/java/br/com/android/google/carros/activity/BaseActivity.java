@@ -1,5 +1,6 @@
 package br.com.android.google.carros.activity;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -76,33 +77,38 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
     }
 
     // Trata o evento do menu lateral
-    private void onNavDrawerItemSelected(MenuItem menuItem){
-        switch (menuItem.getItemId()){
+    private void onNavDrawerItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
             case R.id.nav_item_carros_todos:
-                // Todos os carros: três tabs aqui
-                replaceFragment(new CarrosTabFragment());
+                // Nada aqui pois somente a MainActivity possui menu lateral
                 break;
             case R.id.nav_item_carros_classicos:
-                replaceFragment(CarrosFragment.newInstance(R.string.classicos));
+                Intent intent = new Intent(getContext(), CarrosActivity.class);
+                intent.putExtra("tipo", R.string.classicos);
+                startActivity(intent);
                 break;
             case R.id.nav_item_carros_esportivos:
-                replaceFragment(CarrosFragment.newInstance(R.string.esportivos));
+                intent = new Intent(getContext(), CarrosActivity.class);
+                intent.putExtra("tipo", R.string.esportivos);
+                startActivity(intent);
                 break;
             case R.id.nav_item_carros_luxo:
-                replaceFragment(CarrosFragment.newInstance(R.string.luxo));
+                intent = new Intent(getContext(), CarrosActivity.class);
+                intent.putExtra("tipo", R.string.luxo);
+                startActivity(intent);
                 break;
             case R.id.nav_item_site_livro:
-                replaceFragment(new SiteLivroFragment());
+                startActivity(new Intent(getContext(), SiteLivroActivity.class));
                 break;
             case R.id.nav_item_settings:
-                replaceFragment(new CarrosFragment());
+                toast("Clicou em configurações");
                 break;
         }
     }
 
     //  Adiciona o fragment ao centro da tela
     protected void replaceFragment(Fragment fragment){
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment, "TAG").commit();
+
     }
 
     @Override
