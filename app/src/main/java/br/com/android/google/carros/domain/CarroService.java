@@ -4,6 +4,9 @@ import android.content.Context;
 import android.icu.util.RangeValueIterator;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -24,8 +27,8 @@ public class CarroService {
     private static final String TAG = "CarroService";
 
     public static List<Carro> getCarros(Context context, int tipo) throws IOException{
-        String xml = readFile(context, tipo);
-        List<Carro> carros = parserXML(context, xml);
+        String json = readFile(context, tipo);
+        List<Carro> carros = parserJSON(context, json);
 
         return carros;
     }
@@ -42,32 +45,36 @@ public class CarroService {
     }
 
     //Faz o parser do XML e cria a lista de carros
-    private static List<Carro> parserXML(Context context, String xml){
+    private static List<Carro> parserJSON(Context context, String json) throws IOException{
         List<Carro> carros = new ArrayList<>();
-        Element root = XMLUtils.getRoot(xml, "UTF-8");
-        //Lê todas as tags <carros>
-        List<Node> nodeCarros = XMLUtils.getChildren(root, "carro");
-        //Insere cada carro na lista
-        for(Node node : nodeCarros){
-            Carro c = new Carro();
-            // Lê as informações de cada carro
-            c.nome = XMLUtils.getText(node, "nome");
-            c.desc = XMLUtils.getText(node, "desc");
-            c.urlFoto = XMLUtils.getText(node, "url_foto");
-            c.urlInfo = XMLUtils.getText(node, "url_info");
-            c.urlVideo = XMLUtils.getText(node, "url_video");
-            c.latitude = XMLUtils.getText(node, "latitude");
-            c.longitude = XMLUtils.getText(node, "longitude");
-            if(LOG_ON){
-                Log.d(TAG, "Carro " + c.nome + " > " + c.urlVideo);
+        try {
+            JSONObject root = new JSONObject(json);
+            JSONObject obj = root.getJSONObject("carros");
+            JSONArray jsonCarros = obj.getJSONArray("carro");
+            //Insere cada carro na lista
+            for(int i = 0; i < jsonCarros.length(); i++){
+                JSONObject jsonCarro = jsonCarros.getJSONObject(i);
+                Carro c = new Carro();
+                // Lê as informações de cada carro
+                c.nome = jsonCarro.optString("nome");
+                c.desc = jsonCarro.optString("desc");
+                c.urlFoto = jsonCarro.optString("url_foto");
+                c.urlInfo = jsonCarro.optString("url_info");
+                c.urlVideo = jsonCarro.optString("url_video");
+                c.latitude = jsonCarro.optString("latitude");
+                c.longitude = jsonCarro.optString("longitude");
+                if(LOG_ON){
+                    Log.d(TAG, "Carro " + c.nome + " > " + c.urlVideo);
+                }
+                carros.add(c);
             }
-            carros.add(c);
-        }
 
-        if(LOG_ON){
-            Log.d(TAG, carros.size() + " encontrados");
+            if(LOG_ON){
+                Log.d(TAG, carros.size() + " encontrados");
+            }
+        } catch (JSONException e) {
+            throw new IOException(e.getMessage(), e);
         }
-
         return carros;
     }
 }
