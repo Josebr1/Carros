@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import org.parceler.Parcels;
 
+import java.io.IOException;
 import java.util.List;
 
 import br.com.android.google.carros.R;
@@ -73,10 +75,14 @@ public class CarrosFragment extends BaseFragment {
     }
 
     private void taskCarros(){
-        // Busca os carros pelo tipo
-        this.mCarros = CarroService.getCarros(getContext(), mTipo);
-        //Atualiza a lista
-        mRecyclerView.setAdapter(new CarroAdapter(getContext(), mCarros, onClickCarros()));
+        try {
+            // Busca os carros pelo tipo
+            this.mCarros = CarroService.getCarros(getContext(), mTipo);
+            //Atualiza a lista
+            mRecyclerView.setAdapter(new CarroAdapter(getContext(), mCarros, onClickCarros()));
+        } catch (IOException e) {
+            Log.e("livro", e.getMessage(), e);
+        }
     }
 
     private CarroAdapter.CarroOnClickListener onClickCarros(){
