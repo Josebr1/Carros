@@ -16,6 +16,7 @@ import java.util.List;
 
 import br.com.android.google.carros.R;
 import livroandroid.lib.utils.FileUtils;
+import livroandroid.lib.utils.HttpHelper;
 import livroandroid.lib.utils.XMLUtils;
 
 /**
@@ -25,14 +26,29 @@ public class CarroService {
 
     private static final boolean LOG_ON = false;
     private static final String TAG = "CarroService";
+    private static final String URL = "http://www.livroandroid.com.br/livro/carros/carros_{tipo}.json";
 
     public static List<Carro> getCarros(Context context, int tipo) throws IOException{
-        String json = readFile(context, tipo);
+        String tipoString = getTipo(tipo);
+        String url = URL.replace("{tipo}", tipoString);
+        //Faz a requisição HTTP no servidor e retorna a string com o contúdo
+        HttpHelper http = new HttpHelper();
+        String json = http.doGet(url);
         List<Carro> carros = parserJSON(context, json);
 
         return carros;
     }
 
+    //Converte a constante para string, para criar a URL do web service.
+    private static String getTipo(int tipo){
+        if(tipo == R.string.classicos){
+            return "classicos";
+        }else if(tipo == R.string.esportivos){
+            return "esportivos";
+        }
+        return "luxo";
+    }
+    
     //Faz a leitura do arquivo que está na pasta /res/raw
     private static String readFile(Context context, int tipo) throws IOException{
         if(tipo == R.string.classicos){

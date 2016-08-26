@@ -2,6 +2,7 @@ package br.com.android.google.carros.fragments;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -75,16 +76,33 @@ public class CarrosFragment extends BaseFragment {
     }
 
     private void taskCarros(){
-        try {
-            // Busca os carros pelo tipo
-            this.mCarros = CarroService.getCarros(getContext(), mTipo);
-            //Atualiza a lista
-            mRecyclerView.setAdapter(new CarroAdapter(getContext(), mCarros, onClickCarros()));
-        } catch (IOException e) {
-            Log.e("livro", e.getMessage(), e);
-        }
+        // Busca os carros: Dispara a Task
+        new GetCarrosTask().execute();
     }
 
+    // Task para buscar os carros
+    private class GetCarrosTask extends AsyncTask<Void, Void, List<Carro>>{
+
+        @Override
+        protected List<Carro> doInBackground(Void... voids) {
+            try{
+                //Busca os carros em background (Thread)
+                return CarroService.getCarros(getContext(), mTipo);
+            } catch (IOException e) {
+                Log.e("livroandroid", e.getMessage());
+                return  null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Carro> carros) {
+            if(carros != null){
+                CarrosFragment.this.mCarros = carros;
+                //Atualiza a view na UI Thread
+                mRecyclerView.setAdapter(new CarroAdapter(getContext(), carros, onClickCarros()));
+            }
+        }
+    }
     private CarroAdapter.CarroOnClickListener onClickCarros(){
         return new CarroAdapter.CarroOnClickListener() {
             @Override
