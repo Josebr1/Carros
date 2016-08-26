@@ -77,30 +77,37 @@ public class CarrosFragment extends BaseFragment {
 
     private void taskCarros(){
         // Busca os carros: Dispara a Task
-        new GetCarrosTask().execute();
+        startTask("carros", new GetCarrosTask(), R.id.progress);
     }
 
     // Task para buscar os carros
-    private class GetCarrosTask extends AsyncTask<Void, Void, List<Carro>>{
+    private class GetCarrosTask implements TaskListener<List<Carro>>{
 
         @Override
-        protected List<Carro> doInBackground(Void... voids) {
-            try{
-                //Busca os carros em background (Thread)
-                return CarroService.getCarros(getContext(), mTipo);
-            } catch (IOException e) {
-                Log.e("livroandroid", e.getMessage());
-                return  null;
+        public List<Carro> execute() throws Exception {
+            // Busca os carros em background (Thread)
+            return CarroService.getCarros(getContext(), mTipo);
+        }
+
+        @Override
+        public void updateView(List<Carro> carros) {
+            if(carros != null){
+                //Salva a lista de carros no atributo da classe
+                CarrosFragment.this.mCarros = carros;
+                // Atualiza a view UI Thread
+                mRecyclerView.setAdapter(new CarroAdapter(getContext(), carros, onClickCarros()));
             }
         }
 
         @Override
-        protected void onPostExecute(List<Carro> carros) {
-            if(carros != null){
-                CarrosFragment.this.mCarros = carros;
-                //Atualiza a view na UI Thread
-                mRecyclerView.setAdapter(new CarroAdapter(getContext(), carros, onClickCarros()));
-            }
+        public void onError(Exception exception) {
+            // Qualquer exceção lançada no método execute vai cair aqui
+            alert("Ocorreu algum erro ao buscar os dados.");
+        }
+
+        @Override
+        public void onCancelled(String cod) {
+
         }
     }
     private CarroAdapter.CarroOnClickListener onClickCarros(){
