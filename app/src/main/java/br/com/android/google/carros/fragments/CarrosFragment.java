@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,7 @@ public class CarrosFragment extends BaseFragment {
     private int mTipo;
     protected RecyclerView mRecyclerView;
     private List<Carro> mCarros;
+    private SwipeRefreshLayout mSwipeLayout;
 
     // Método para instanciar esse fragment pelo tipo
     public static CarrosFragment newInstance(int tipo){
@@ -66,18 +68,37 @@ public class CarrosFragment extends BaseFragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setHasFixedSize(true);
 
+        // Swipe to Refresh
+        mSwipeLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeToRefresh);
+        mSwipeLayout.setOnRefreshListener(OnRefreshListener());
+        mSwipeLayout.setColorSchemeResources(
+                R.color.refresh_progress_1,
+                R.color.refresh_progress_2,
+                R.color.refresh_progress_3
+        );
+
         return view;
+    }
+
+    private SwipeRefreshLayout.OnRefreshListener OnRefreshListener(){
+        return new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Atualiza ao fazer o gesto Pull to Refresh
+                taskCarros(true);
+            }
+        };
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        taskCarros();
+        taskCarros(false);
     }
 
-    private void taskCarros(){
+    private void taskCarros(boolean pullToResfresh){
         // Busca os carros: Dispara a Task
-        startTask("carros", new GetCarrosTask(), R.id.progress);
+        startTask("carros", new GetCarrosTask(), pullToResfresh ? R.id.swipeToRefresh : R.id.progress);
     }
 
     // Task para buscar os carros
@@ -122,6 +143,9 @@ public class CarrosFragment extends BaseFragment {
             }
         };
     }
+
+
+
 
 
 }
