@@ -40,6 +40,7 @@ Versao %s<br><br>
 
     <!-- O -->
     <string name="ok">OK</string>
+    <string name="error_conexao_indisponivel">Conexão indisponível. Verifique seu Wi-Fi ou 3G.</string>
 
     <!-- S -->
     <string name="sobre">Sobre</string>

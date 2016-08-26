@@ -27,6 +27,7 @@ import br.com.android.google.carros.activity.CarroActivity;
 import br.com.android.google.carros.adapter.CarroAdapter;
 import br.com.android.google.carros.domain.Carro;
 import br.com.android.google.carros.domain.CarroService;
+import livroandroid.lib.utils.AndroidUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,8 +85,13 @@ public class CarrosFragment extends BaseFragment {
         return new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Atualiza ao fazer o gesto Pull to Refresh
-                taskCarros(true);
+                // Valida se existe conexão ao fazer o gesto de Pull to Refresh
+                if(AndroidUtils.isNetworkAvailable(getContext())){
+                    taskCarros(true);
+                }else{
+                    mSwipeLayout.setRefreshing(false);
+                    snack(mRecyclerView, R.string.error_conexao_indisponivel);
+                }
             }
         };
     }
