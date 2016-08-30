@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.com.android.google.carros.R;
+import br.com.android.google.carros.activity.prefs.ConfiguracoesActivity;
 import br.com.android.google.carros.fragments.CarrosFragment;
 import br.com.android.google.carros.fragments.CarrosTabFragment;
 import br.com.android.google.carros.fragments.SiteLivroFragment;
@@ -101,7 +102,7 @@ public class BaseActivity extends livroandroid.lib.activity.BaseActivity {
                 startActivity(new Intent(getContext(), SiteLivroActivity.class));
                 break;
             case R.id.nav_item_settings:
-                toast("Clicou em configurações");
+                startActivity(new Intent(this, ConfiguracoesActivity.class));
                 break;
         }
     }
