@@ -32,6 +32,7 @@ Versao %s<br><br>
 
     <!-- M -->
     <string name="mapa">Mapa</string>
+    <string name="msg_alerta_permission">Para utilizar este aplicativo, você precisa aceitar as permissões.</string>
 
     <!-- N -->
     <string name="nav_drawer_username">Ricardo Lecheta</string>
