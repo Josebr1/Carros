@@ -2,6 +2,7 @@ package br.com.android.google.carros.domain;
 
 import android.content.Context;
 import android.icu.util.RangeValueIterator;
+import android.os.Environment;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -19,6 +20,7 @@ import br.com.android.google.carros.R;
 import livroandroid.lib.utils.FileUtils;
 import livroandroid.lib.utils.HttpHelper;
 import livroandroid.lib.utils.IOUtils;
+import livroandroid.lib.utils.SDCardUtils;
 import livroandroid.lib.utils.XMLUtils;
 
 /**
@@ -40,6 +42,7 @@ public class CarroService {
 
         // No final deste método vamos salvar o texto do JSON em arquivo
         salvaArquivoNaMemoriaInterna(context, url, json);
+        salvaArquivoNaMemoriaExterna(context, url, json);
 
         return carros;
     }
@@ -49,6 +52,17 @@ public class CarroService {
         File file = FileUtils.getFile(context, fileName);
         IOUtils.writeString(file, json);
         Log.d(TAG, "Arquivo salvo: " + file);
+    }
+
+    private static void salvaArquivoNaMemoriaExterna(Context context, String url, String json){
+        String fileName = url.substring(url.lastIndexOf("/")+1);
+        // Cria um arquivo privado
+        File file = SDCardUtils.getPrivateFile(context, fileName, Environment.DIRECTORY_DOWNLOADS);
+        IOUtils.writeString(file, json);
+        Log.d(TAG, "Arquivo privado salvo: " + file);
+        file = SDCardUtils.getPublicFile(fileName, Environment.DIRECTORY_DOWNLOADS);
+        IOUtils.writeString(file, json);
+        Log.d(TAG, "Arquivo publico salvo: " + file);
     }
 
     //Converte a constante para string, para criar a URL do web service.
