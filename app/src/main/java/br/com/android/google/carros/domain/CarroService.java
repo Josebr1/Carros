@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 import br.com.android.google.carros.R;
 import livroandroid.lib.utils.FileUtils;
 import livroandroid.lib.utils.HttpHelper;
+import livroandroid.lib.utils.IOUtils;
 import livroandroid.lib.utils.XMLUtils;
 
 /**
@@ -36,7 +38,17 @@ public class CarroService {
         String json = http.doGet(url);
         List<Carro> carros = parserJSON(context, json);
 
+        // No final deste método vamos salvar o texto do JSON em arquivo
+        salvaArquivoNaMemoriaInterna(context, url, json);
+
         return carros;
+    }
+
+    private static void salvaArquivoNaMemoriaInterna(Context context, String url, String json){
+        String fileName = url.substring(url.lastIndexOf("/")+1);
+        File file = FileUtils.getFile(context, fileName);
+        IOUtils.writeString(file, json);
+        Log.d(TAG, "Arquivo salvo: " + file);
     }
 
     //Converte a constante para string, para criar a URL do web service.
