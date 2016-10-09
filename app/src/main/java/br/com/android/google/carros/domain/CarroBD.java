@@ -21,6 +21,7 @@ public class CarroBD extends SQLiteOpenHelper {
 
     // Nome do banco
     public static final String NOME_BANCO = "livro_android.sqlite";
+    public static final String NOME_TABLE = "carro";
     private static final int VERSAO_BANCO = 1;
 
     public CarroBD(Context context) {
@@ -31,7 +32,7 @@ public class CarroBD extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.d(TAG, "Criando a Tabela carro...");
-        db.execSQL("create table if not exist carro (_id integer primary key autoincrement," +
+        db.execSQL("create table " + NOME_TABLE + "(_id integer primary key autoincrement," +
                 " nome text," +
                 " desc text," +
                 " url_foto text," +
@@ -46,6 +47,8 @@ public class CarroBD extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //Caso mude a versão do banco de dados, podemos executar um sql aqui
+        db.execSQL("drop table is exists " + NOME_TABLE);
+        onCreate(db);
     }
 
     //Insere um novo carro, ou atualiza se já existe
@@ -70,7 +73,7 @@ public class CarroBD extends SQLiteOpenHelper {
                 return count;
             }else{
                 //Insert into carro values (...)
-                id = db.insert("carro", "", values);
+                db.insert("carro", null, values);
                 return id;
             }
         }finally {
@@ -139,8 +142,8 @@ public class CarroBD extends SQLiteOpenHelper {
                 carro.id = c.getLong(c.getColumnIndex("_id"));
                 carro.nome = c.getString(c.getColumnIndex("nome"));
                 carro.desc = c.getString(c.getColumnIndex("desc"));
-                carro.urlFoto = c.getString(c.getColumnIndex("url_foto"));
                 carro.urlInfo = c.getString(c.getColumnIndex("url_info"));
+                carro.urlFoto = c.getString(c.getColumnIndex("url_foto"));
                 carro.urlVideo = c.getString(c.getColumnIndex("url_video"));
                 carro.latitude = c.getString(c.getColumnIndex("latitude"));
                 carro.longitude = c.getString(c.getColumnIndex("longitude"));
