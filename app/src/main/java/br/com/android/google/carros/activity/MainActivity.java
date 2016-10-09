@@ -1,9 +1,11 @@
 package br.com.android.google.carros.activity;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +35,12 @@ public class MainActivity extends BaseActivity {
                 snack(view, "Exemplo de FAB Button");
             }
         });
+
+        //
+        Log.d("tag", "getFileDir > " + getFilesDir());
+        Log.d("tag", "getFileDir > " + getFileStreamPath("arquivo.txt"));
+        Log.d("tag", "getFileDir > " + getExternalFilesDir(Environment.DIRECTORY_DCIM));
+        Log.d("tag", "getFileDir > " + getCacheDir());
     }
 
     // Configura as Tabs + ViewPager

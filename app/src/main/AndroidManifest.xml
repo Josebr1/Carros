@@ -51,7 +51,7 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar.NavDrawer"></activity>
+            android:theme="@style/AppTheme.NoActionBar.NavDrawer" />
     </application>
 
 </manifest>

@@ -3,6 +3,7 @@ package br.com.android.google.carros.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * Created by jose on 29/08/2016.

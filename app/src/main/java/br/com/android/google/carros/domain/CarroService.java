@@ -33,16 +33,44 @@ public class CarroService {
     private static final String URL = "http://www.livroandroid.com.br/livro/carros/carros_{tipo}.json";
 
     public static List<Carro> getCarros(Context context, int tipo) throws IOException{
+        List<Carro> carros = getCarrosFromArquivo(context, tipo);
+        if(carros != null){
+            //Encontrou o arquivo
+            return  carros;
+        }
+
+        // Se não encontrar, busca no web service
+        carros = getCarrosFromWebService(context, tipo);
+        return carros;
+    }
+
+    // Abre o arquivo salvo, se existir, e cria a lista de carros
+    public static List<Carro> getCarrosFromArquivo(Context context, int tipo) throws IOException{
+        String tipoString = getTipo(tipo);
+        String fileName = String.format("carros_%s.json", tipoString);
+        Log.d(TAG, "Abrindo arquivo: " + fileName);
+
+        //Lê o arquivo de memôria interna
+        String json = FileUtils.readFile(context, fileName, "UTF-8");
+        if(json == null){
+            Log.d(TAG, "Arquivo " + fileName + " Não encontrado");
+            return null;
+        }
+
+        List<Carro> carros = parserJSON(context, json);
+        Log.d(TAG, "Retornando carros do arquivo " + fileName + ".");
+        return carros;
+    }
+
+    // Faz a requisição HTTP, cria a lista de carros e salva o JSON em arquivo
+    public static List<Carro> getCarrosFromWebService(Context context, int tipo) throws IOException{
         String tipoString = getTipo(tipo);
         String url = URL.replace("{tipo}", tipoString);
-        //Faz a requisição HTTP no servidor e retorna a string com o contúdo
+        Log.d(TAG, "URL: " + url);
         HttpHelper http = new HttpHelper();
         String json = http.doGet(url);
         List<Carro> carros = parserJSON(context, json);
-
-        // No final deste método vamos salvar o texto do JSON em arquivo
         salvaArquivoNaMemoriaInterna(context, url, json);
-        salvaArquivoNaMemoriaExterna(context, url, json);
 
         return carros;
     }
