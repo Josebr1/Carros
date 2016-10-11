@@ -32,10 +32,11 @@ public class CarroService {
     private static final String TAG = "CarroService";
     private static final String URL = "http://www.livroandroid.com.br/livro/carros/carros_{tipo}.json";
 
-    public static List<Carro> getCarros(Context context, int tipo) throws IOException{
-        List<Carro> carros = getCarrosFromBanco(context, tipo);
+    public static List<Carro> getCarros(Context context, int tipo, boolean refresh) throws IOException{
+        // Busca os carros no banco de dados (somente se refresh=false)
+        List<Carro> carros = !refresh ? getCarrosFromBanco(context, tipo) : null;
         if(carros != null && carros.size() > 0){
-            //Encontrou o arquivo
+            //Encontrou o banco
             return  carros;
         }
 
