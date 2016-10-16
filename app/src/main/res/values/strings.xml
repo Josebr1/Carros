@@ -22,9 +22,11 @@ Versao %s<br><br>
 
     <!-- D -->
     <string name="descricao">Descrição</string>
+    <string name="delete">Delete</string>
 
     <!-- E -->
     <string name="esportivos">Esportivos</string>
+    <string name="editar">Editar</string>
 
     <!-- L -->
     <string name="luxo">Luxo</string>
@@ -46,6 +48,7 @@ Versao %s<br><br>
     <!-- S -->
     <string name="sobre">Sobre</string>
     <string name="site_do_livro">Site do Livro</string>
+    <string name="share">Share</string>
 
     <!-- V -->
     <string name="vazio" />

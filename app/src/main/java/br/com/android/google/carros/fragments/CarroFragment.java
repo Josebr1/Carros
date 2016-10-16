@@ -7,6 +7,9 @@ import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,6 +37,9 @@ public class CarroFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_carro, container, false);
         mCarro = Parcels.unwrap(getArguments().getParcelable("carro"));
+
+        setHasOptionsMenu(true); // Precisa informar o Android que este fragment contém menu
+
         return view;
     }
 
@@ -44,5 +50,32 @@ public class CarroFragment extends BaseFragment {
         setTextString(R.id.tDesc, mCarro.desc);
         final ImageView imgView = (ImageView) getView().findViewById(R.id.img);
         Picasso.with(getContext()).load(mCarro.urlFoto).fit().into(imgView);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_flag_carro, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.action_edit){
+            toast("Editar: " + mCarro.nome);
+            return true;
+        }else if(item.getItemId() == R.id.action_delete){
+            toast("Delete: " + mCarro.nome);
+            return true;
+        }else if(item.getItemId() == R.id.action_share){
+            toast("Compartilhar");
+            return true;
+        }else if(item.getItemId() == R.id.action_maps){
+            toast("Mapa");
+            return true;
+        }else if(item.getItemId() == R.id.action_video){
+            toast("Vídeo");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

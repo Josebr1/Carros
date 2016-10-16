@@ -61,7 +61,6 @@ public class CarrosFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_carros, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -102,9 +101,9 @@ public class CarrosFragment extends BaseFragment {
         taskCarros(false);
     }
 
-    private void taskCarros(boolean pullToResfresh){
+    private void taskCarros(boolean pullToRefresh){
         // Busca os carros: Dispara a Task
-        startTask("carros", new GetCarrosTask(pullToResfresh), pullToResfresh ? R.id.swipeToRefresh : R.id.progress);
+        startTask("carros", new GetCarrosTask(pullToRefresh), pullToRefresh ? R.id.swipeToRefresh : R.id.progress);
     }
 
     // Task para buscar os carros
