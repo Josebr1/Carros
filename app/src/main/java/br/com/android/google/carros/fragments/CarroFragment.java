@@ -19,7 +19,10 @@ import com.squareup.picasso.Picasso;
 import org.parceler.Parcels;
 
 import br.com.android.google.carros.R;
+import br.com.android.google.carros.activity.CarroActivity;
 import br.com.android.google.carros.domain.Carro;
+import br.com.android.google.carros.domain.CarroBD;
+import br.com.android.google.carros.fragments.dialog.EditarCarroDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +64,19 @@ public class CarroFragment extends BaseFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.action_edit){
-            toast("Editar: " + mCarro.nome);
+            //toast("Editar: " + mCarro.nome);
+            EditarCarroDialog.show(getFragmentManager(), mCarro, new EditarCarroDialog.CallBack() {
+                @Override
+                public void onCarroUpdated(Carro carro) {
+                    toast("Carro [" + carro.nome + "] atualizado");
+                    // Salva o carro depois de fechar o dialog
+                    CarroBD db = new CarroBD(getContext());
+                    db.save(carro);
+                    //Atualiza o titulo com o novo nome
+                    CarroActivity carroActivity = (CarroActivity) getActivity();
+                    carroActivity.setTitle(carro.nome);
+                }
+            });
             return true;
         }else if(item.getItemId() == R.id.action_delete){
             toast("Delete: " + mCarro.nome);

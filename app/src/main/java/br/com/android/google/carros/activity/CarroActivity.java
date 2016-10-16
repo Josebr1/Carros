@@ -1,6 +1,7 @@
 package br.com.android.google.carros.activity;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -33,5 +34,11 @@ public class CarroActivity extends BaseActivity {
             // Adiciona o fragment no layout
             getSupportFragmentManager().beginTransaction().add(R.id.CarroFragment,frag).commit();
         }
+    }
+
+    public void setTitle(String s){
+        // O título deve ser setado na CollapsingToolbarLayout
+        CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        toolbarLayout.setTitle(s);
     }
 }
