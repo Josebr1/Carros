@@ -22,6 +22,7 @@ import br.com.android.google.carros.R;
 import br.com.android.google.carros.activity.CarroActivity;
 import br.com.android.google.carros.domain.Carro;
 import br.com.android.google.carros.domain.CarroBD;
+import br.com.android.google.carros.fragments.dialog.DeletarCarroDialog;
 import br.com.android.google.carros.fragments.dialog.EditarCarroDialog;
 
 /**
@@ -79,7 +80,18 @@ public class CarroFragment extends BaseFragment {
             });
             return true;
         }else if(item.getItemId() == R.id.action_delete){
-            toast("Delete: " + mCarro.nome);
+            //toast("Delete: " + mCarro.nome);
+            DeletarCarroDialog.show(getFragmentManager(), new DeletarCarroDialog.CallBack() {
+                @Override
+                public void onClickYes() {
+                    toast("Carro [" + mCarro.nome + "] deletado.");
+                    //Deleta Carro
+                    CarroBD db = new CarroBD(getActivity());
+                    db.delete(mCarro);
+                    //Fecha a Activity
+                    getActivity().finish();
+                }
+            });
             return true;
         }else if(item.getItemId() == R.id.action_share){
             toast("Compartilhar");
