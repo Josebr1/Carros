@@ -1,5 +1,6 @@
 package br.com.android.google.carros.activity;
 
+import android.app.backup.BackupManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.TabLayout;
@@ -16,6 +17,8 @@ import br.com.android.google.carros.fragments.AboutDialog;
 import livroandroid.lib.utils.Prefs;
 
 public class MainActivity extends BaseActivity {
+
+    private BackupManager backupManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +38,9 @@ public class MainActivity extends BaseActivity {
                 snack(view, "Exemplo de FAB Button");
             }
         });
+
+        //Gerenciador de backup
+        backupManager = new BackupManager(getContext());
 
         //
         Log.d("tag", "getFileDir > " + getFilesDir());
@@ -70,6 +76,8 @@ public class MainActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 // Salva o índice da página/tab selecionada
                 Prefs.setInteger(getContext(), "tabIdx", viewPager.getCurrentItem());
+                // Faz o backup
+                backupManager.dataChanged();
             }
 
             @Override
