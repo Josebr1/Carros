@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import org.parceler.Parcels;
 
+import br.com.android.google.carros.CarrosApplication;
 import br.com.android.google.carros.R;
 import br.com.android.google.carros.activity.CarroActivity;
 import br.com.android.google.carros.domain.Carro;
@@ -76,6 +77,9 @@ public class CarroFragment extends BaseFragment {
                     //Atualiza o titulo com o novo nome
                     CarroActivity carroActivity = (CarroActivity) getActivity();
                     carroActivity.setTitle(carro.nome);
+
+                    // Envia o evento para bus
+                    CarrosApplication.getInstance().getBus().post("refresh");
                 }
             });
             return true;
@@ -90,6 +94,9 @@ public class CarroFragment extends BaseFragment {
                     db.delete(mCarro);
                     //Fecha a Activity
                     getActivity().finish();
+
+                    // Envia o evento para o bus
+                    CarrosApplication.getInstance().getBus().post("refresh");
                 }
             });
             return true;
