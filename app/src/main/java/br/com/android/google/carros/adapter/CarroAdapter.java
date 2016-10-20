@@ -70,7 +70,7 @@ public class CarroAdapter extends RecyclerView.Adapter<CarroAdapter.CarrosViewHo
             }
         });
 
-        // Click
+        // Click normal
         if(mCarroOnClickListener != null){
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -81,10 +81,20 @@ public class CarroAdapter extends RecyclerView.Adapter<CarroAdapter.CarrosViewHo
             });
         }
 
+        // Click Longo
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mCarroOnClickListener.onLongClickCarro(holder.itemView, position);
+                return true;
+            }
+        });
+
     }
 
     public interface CarroOnClickListener{
-        public void onClickCarro(View view, int idx);
+        void onClickCarro(View view, int idx);
+        void onLongClickCarro(View view, int idx);
     }
 
     // ViewHolder com as views

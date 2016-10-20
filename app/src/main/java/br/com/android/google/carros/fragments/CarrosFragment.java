@@ -162,6 +162,12 @@ public class CarrosFragment extends BaseFragment {
                 intent.putExtra("carro", Parcels.wrap(c));// Converte o objeto para Parcelable
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClickCarro(View view, int idx) {
+                Carro carro = mCarros.get(idx);
+                toast("Clicou e segurou: " + carro.nome);
+            }
         };
     }
 
