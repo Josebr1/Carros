@@ -90,6 +90,14 @@ public class CarroAdapter extends RecyclerView.Adapter<CarroAdapter.CarrosViewHo
             }
         });
 
+        // Pinta o fundo de azul se alinha estiver selecionada
+        int corFundo = mContext.getResources().getColor(c.selected ? R.color.primary : R.color.white);
+        holder.cardView.setCardBackgroundColor(corFundo);
+
+        // A cor do texto é branca ou azul, depende da cor do fundo
+        int corFunte = mContext.getResources().getColor(c.selected ? R.color.white : R.color.primary);
+        holder.tNome.setTextColor(corFunte);
+
     }
 
     public interface CarroOnClickListener{

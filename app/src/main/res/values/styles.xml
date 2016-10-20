@@ -12,6 +12,10 @@
         <item name="colorControlHighlight">@color/control_highlight</item>
         <!-- Preferences -->
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
+        <!-- Action Mode Overlay -->
+        <item name="windowActionModeOverlay">true</item>
+        <!-- Cor da action bar de contexto -->
+        <item name="actionModeBackground">@color/primary</item>
     </style>
 
     <!-- Tema base + NoActionBar -->

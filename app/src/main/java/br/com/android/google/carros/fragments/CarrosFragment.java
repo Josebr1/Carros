@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,6 +26,7 @@ import com.squareup.otto.Subscribe;
 import org.parceler.Parcels;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.android.google.carros.CarrosApplication;
@@ -42,6 +47,7 @@ public class CarrosFragment extends BaseFragment {
     protected RecyclerView mRecyclerView;
     private List<Carro> mCarros;
     private SwipeRefreshLayout mSwipeLayout;
+    private ActionMode mActionMode;
 
     // Método para instanciar esse fragment pelo tipo
     public static CarrosFragment newInstance(int tipo){
@@ -158,17 +164,62 @@ public class CarrosFragment extends BaseFragment {
             public void onClickCarro(View view, int idx) {
                 //Toast.makeText(getContext(), "Carro: " + c.nome, Toast.LENGTH_SHORT).show();
                 Carro c = mCarros.get(idx);
-                Intent intent = new Intent(getContext(), CarroActivity.class);
-                intent.putExtra("carro", Parcels.wrap(c));// Converte o objeto para Parcelable
-                startActivity(intent);
+                if(mActionMode == null){
+                    Intent intent = new Intent(getContext(), CarroActivity.class);
+                    intent.putExtra("carro", Parcels.wrap(c));// Converte o objeto para Parcelable
+                    startActivity(intent);
+                }else{// Se a CAB está ativada
+                    // Seleciona o carro
+                    c.selected = !c.selected;
+                    // Atualiza o título com a quantidade de carros selecionados
+                    updateActionModeTitle();
+                    //Redesenha a lista
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
+                }
+
             }
 
             @Override
             public void onLongClickCarro(View view, int idx) {
+                if(mActionMode != null){
+                    return;
+                }
+
+                // Liga a action bar de contexto
+                mActionMode = getAppCompatActivity().startSupportActionMode(getActionModeCallback());
                 Carro carro = mCarros.get(idx);
-                toast("Clicou e segurou: " + carro.nome);
+                carro.selected = true; // Seleciona o carro
+                // Solicita ao Android para desenha a lista novamente
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+                // Atualiza o título para mostrar a quantidade de carros selecionados
+                updateActionModeTitle();
             }
         };
+    }
+
+    // Atualiza o título da action bar (CAB)
+    private void updateActionModeTitle(){
+        if(mActionMode != null){
+            mActionMode.setTitle("Selecione os carros.");
+            mActionMode.setSubtitle(null);
+            List<Carro> selectedCarros = getSelectedCarros();
+            if(selectedCarros.size() == 1){
+                mActionMode.setSubtitle("1 carro selecionado");
+            }else if(selectedCarros.size() > 1){
+                mActionMode.setSubtitle(selectedCarros.size() + " carros selecionados");
+            }
+        }
+    }
+
+    // Retorna a lista de carros selecionados
+    private List<Carro> getSelectedCarros(){
+        List<Carro> list = new ArrayList<>();
+        for(Carro c : mCarros){
+            if(c.selected){
+                list.add(c);
+            }
+        }
+        return list;
     }
 
     // Método chamado quando o evento for disparado
@@ -178,6 +229,45 @@ public class CarrosFragment extends BaseFragment {
         taskCarros(false);
     }
 
+    private ActionMode.Callback getActionModeCallback(){
+        return new ActionMode.Callback() {
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                // Infla o menu específico da action bar de contexto (CAB)
+                MenuInflater inflater = getActivity().getMenuInflater();
+                inflater.inflate(R.menu.menu_frag_carros_context, menu);
+                return true;
+            }
 
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return true;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                List<Carro> selectedCarros = getSelectedCarros();
+                if(item.getItemId() == R.id.action_remove){
+                    toast("Remover " + selectedCarros);
+                }else if(item.getItemId() == R.id.action_share){
+                    toast("Compartilhar: " + selectedCarros);
+                }
+                // Encerra o action mode
+                mode.finish();
+                return true;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                // Limpa o estado
+                mActionMode = null;
+                //Configura todos os carros para não selecionados
+                for(Carro c : mCarros){
+                    c.selected = false;
+                }
+                mRecyclerView.getAdapter().notifyDataSetChanged();
+            }
+        };
+    }
 
 }
