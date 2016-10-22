@@ -6,26 +6,24 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
 import org.parceler.Parcels;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +47,7 @@ public class CarrosFragment extends BaseFragment {
     private List<Carro> mCarros;
     private SwipeRefreshLayout mSwipeLayout;
     private ActionMode mActionMode;
+    private Intent mShareIntent;
 
     // Método para instanciar esse fragment pelo tipo
     public static CarrosFragment newInstance(int tipo){
@@ -209,6 +208,15 @@ public class CarrosFragment extends BaseFragment {
             }else if(selectedCarros.size() > 1){
                 mActionMode.setSubtitle(selectedCarros.size() + " carros selecionados");
             }
+            updateShareIntent(selectedCarros);
+        }
+    }
+
+    // Atualiza a share intent com os carros selecionados
+    private void updateShareIntent(List<Carro> selectedCarros){
+        if(mShareIntent != null){
+            // Texto com os carros
+            mShareIntent.putExtra(Intent.EXTRA_TEXT, "Carros: " + selectedCarros);
         }
     }
 
@@ -237,6 +245,11 @@ public class CarrosFragment extends BaseFragment {
                 // Infla o menu específico da action bar de contexto (CAB)
                 MenuInflater inflater = getActivity().getMenuInflater();
                 inflater.inflate(R.menu.menu_frag_carros_context, menu);
+                MenuItem shareItem = menu.findItem(R.id.action_share);
+                ShareActionProvider share = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+                mShareIntent = new Intent(Intent.ACTION_SEND);
+                mShareIntent.setType("text/*");
+                share.setShareIntent(mShareIntent);
                 return true;
             }
 

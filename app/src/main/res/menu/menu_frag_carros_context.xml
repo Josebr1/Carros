@@ -5,7 +5,9 @@
     <item android:title="@string/share"
         android:showAsAction="always"
         android:id="@+id/action_share"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
         android:icon="@drawable/ic_action_share" />
+
     <item android:title="@string/delete"
         android:showAsAction="always"
         android:id="@+id/action_remove"
