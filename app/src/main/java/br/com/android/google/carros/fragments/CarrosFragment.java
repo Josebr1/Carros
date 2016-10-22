@@ -34,6 +34,7 @@ import br.com.android.google.carros.R;
 import br.com.android.google.carros.activity.CarroActivity;
 import br.com.android.google.carros.adapter.CarroAdapter;
 import br.com.android.google.carros.domain.Carro;
+import br.com.android.google.carros.domain.CarroBD;
 import br.com.android.google.carros.domain.CarroService;
 import livroandroid.lib.utils.AndroidUtils;
 
@@ -248,7 +249,17 @@ public class CarrosFragment extends BaseFragment {
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 List<Carro> selectedCarros = getSelectedCarros();
                 if(item.getItemId() == R.id.action_remove){
-                    toast("Remover " + selectedCarros);
+                    //toast("Remover " + selectedCarros);
+                    CarroBD db = new CarroBD(getContext());
+                    try{
+                        for(Carro c: selectedCarros){
+                            db.delete(c); // Deleta o carro do banco
+                            mCarros.remove(c); // Remove da lista
+                        }
+                    }finally {
+                        db.close();
+                    }
+                    snack(mRecyclerView, "Carros excluídos com sucesso.");
                 }else if(item.getItemId() == R.id.action_share){
                     toast("Compartilhar: " + selectedCarros);
                 }
