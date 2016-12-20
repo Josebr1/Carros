@@ -1,11 +1,8 @@
 package br.com.android.google.carros.fragments;
 
-
-import android.media.Image;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +22,7 @@ import br.com.android.google.carros.domain.Carro;
 import br.com.android.google.carros.domain.CarroBD;
 import br.com.android.google.carros.fragments.dialog.DeletarCarroDialog;
 import br.com.android.google.carros.fragments.dialog.EditarCarroDialog;
+import livroandroid.lib.utils.IntentUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,6 +42,13 @@ public class CarroFragment extends BaseFragment {
         mCarro = Parcels.unwrap(getArguments().getParcelable("carro"));
 
         setHasOptionsMenu(true); // Precisa informar o Android que este fragment contém menu
+
+        view.findViewById(R.id.imgPlayVideo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showVideo(mCarro.urlVideo, v);
+            }
+        });
 
         return view;
     }
@@ -65,7 +70,7 @@ public class CarroFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_edit){
+        if (item.getItemId() == R.id.action_edit) {
             //toast("Editar: " + mCarro.nome);
             EditarCarroDialog.show(getFragmentManager(), mCarro, new EditarCarroDialog.CallBack() {
                 @Override
@@ -83,7 +88,7 @@ public class CarroFragment extends BaseFragment {
                 }
             });
             return true;
-        }else if(item.getItemId() == R.id.action_delete){
+        } else if (item.getItemId() == R.id.action_delete) {
             //toast("Delete: " + mCarro.nome);
             DeletarCarroDialog.show(getFragmentManager(), new DeletarCarroDialog.CallBack() {
                 @Override
@@ -100,16 +105,49 @@ public class CarroFragment extends BaseFragment {
                 }
             });
             return true;
-        }else if(item.getItemId() == R.id.action_share){
+        } else if (item.getItemId() == R.id.action_share) {
             toast("Compartilhar");
             return true;
-        }else if(item.getItemId() == R.id.action_maps){
+        } else if (item.getItemId() == R.id.action_maps) {
             toast("Mapa");
             return true;
-        }else if(item.getItemId() == R.id.action_video){
-            toast("Vídeo");
-            return true;
+        } else if (item.getItemId() == R.id.action_video) {
+            toast("Video");
+            // URL do vídeo
+            final String url = mCarro.urlVideo;
+            // Lê a view que é a âncora do popup (é a view do botão da action bar)
+            View menuItemView = getActivity().findViewById(item.getItemId());
+            if (menuItemView != null && url != null) {
+                // Mostra o alerta com as opções do vídeo
+                showVideo(url, menuItemView);
+            }
         }
         return super.onOptionsItemSelected(item);
     }
+
+    // Cria a PopupMenu posicionado na âncora
+    private void showVideo(final String url, View ancoraView){
+        if(url != null && ancoraView != null){
+            // Cria o PopupMenu posicionado na âncora
+            PopupMenu popupMenu = new PopupMenu(getActionBar().getThemedContext(), ancoraView);
+            popupMenu.inflate(R.menu.menu_popup_video);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    if(item.getItemId() == R.id.action_video_browser){
+                        // Abre o vídeo no browser
+                        IntentUtils.openBrowser(getContext(), url);
+                    }else if(item.getItemId() == R.id.action_video_player){
+                        // Abre o vídeo no player de vídeo nativo
+                        IntentUtils.showVideo(getContext(), url);
+                    }else if(item.getItemId() == R.id.action_video_videoview){
+                        // Abre outra activity com o VideoView
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        }
+    }
+
 }

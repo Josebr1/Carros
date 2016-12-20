@@ -15,6 +15,9 @@ Versao %s<br><br>
 	]]>
 	</string>
     <string name="about_dialog_title">Livro Android</string>
+    <string name="action_video_browser">Browser</string>
+    <string name="action_video_player">Video Player</string>
+    <string name="action_video_videoview">VideoView</string>
 
     <!-- C -->
     <string name="carros">Carros</string>

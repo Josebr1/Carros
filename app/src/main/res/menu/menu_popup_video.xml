@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="@string/action_video_player"
+        android:id="@+id/action_video_player"
+        app:showAsAction="always" />
+
+    <item android:title="@string/action_video_browser"
+        android:id="@+id/action_video_browser"
+        app:showAsAction="always" />
+    <item
+        android:title="@string/action_video_videoview"
+        android:id="@+id/action_video_videoview"
+        app:showAsAction="always" />
+</menu>
