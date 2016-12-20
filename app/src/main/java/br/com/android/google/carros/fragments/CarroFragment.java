@@ -1,5 +1,6 @@
 package br.com.android.google.carros.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
@@ -18,6 +19,7 @@ import org.parceler.Parcels;
 import br.com.android.google.carros.CarrosApplication;
 import br.com.android.google.carros.R;
 import br.com.android.google.carros.activity.CarroActivity;
+import br.com.android.google.carros.activity.VideoActivity;
 import br.com.android.google.carros.domain.Carro;
 import br.com.android.google.carros.domain.CarroBD;
 import br.com.android.google.carros.fragments.dialog.DeletarCarroDialog;
@@ -142,6 +144,9 @@ public class CarroFragment extends BaseFragment {
                         IntentUtils.showVideo(getContext(), url);
                     }else if(item.getItemId() == R.id.action_video_videoview){
                         // Abre outra activity com o VideoView
+                        Intent intent = new Intent(getContext(), VideoActivity.class);
+                        intent.putExtra("carro", Parcels.wrap(mCarro));
+                        startActivity(intent);
                     }
                     return true;
                 }

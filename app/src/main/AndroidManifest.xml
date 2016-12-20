@@ -59,6 +59,11 @@
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.NavDrawer" />
+        <activity android:name=".activity.VideoActivity"
+            android:parentActivityName=".activity.CarroActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.CarroActivity" />
+        </activity>
     </application>
 
 </manifest>
