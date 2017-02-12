@@ -1,15 +1,12 @@
 package br.com.android.google.carros.fragments;
 
-
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -64,7 +61,18 @@ public class MapaFragment extends BaseFragment implements OnMapReadyCallback {
             Log.d("Lng", "OK - " + carro.longitude);
             // Posiciona o mapa na coordenada da fábrica (zoom = 13)
             CameraUpdate update = CameraUpdateFactory.newLatLngZoom(location, 13);
-            map.moveCamera(update);
+            // map.moveCamera(update);
+            map.animateCamera(update, 10000, new GoogleMap.CancelableCallback() {
+                @Override
+                public void onFinish() {
+                    Toast.makeText(getContext(), "Mapa centralizado.", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(getContext(), "Animação cancelada.", Toast.LENGTH_SHORT).show();
+                }
+            });
             // Marca no local da fábrica
             map.addMarker(new MarkerOptions()
                     .title(carro.nome)
