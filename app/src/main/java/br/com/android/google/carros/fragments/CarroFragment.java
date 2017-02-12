@@ -19,6 +19,8 @@ import org.parceler.Parcels;
 import br.com.android.google.carros.CarrosApplication;
 import br.com.android.google.carros.R;
 import br.com.android.google.carros.activity.CarroActivity;
+import br.com.android.google.carros.activity.MainActivity;
+import br.com.android.google.carros.activity.MapaActivity;
 import br.com.android.google.carros.activity.VideoActivity;
 import br.com.android.google.carros.domain.Carro;
 import br.com.android.google.carros.domain.CarroBD;
@@ -62,6 +64,13 @@ public class CarroFragment extends BaseFragment {
         setTextString(R.id.tDesc, mCarro.desc);
         final ImageView imgView = (ImageView) getView().findViewById(R.id.img);
         Picasso.with(getContext()).load(mCarro.urlFoto).fit().into(imgView);
+
+        //  Configura a  Lat/Lng
+        setTextString(R.id.tLatLng, String.format("Lat/Lng: %s/%s", mCarro.latitude, mCarro.longitude));
+        // Adiciona o fragment do Mapa
+        MapaFragment mapaFragment = new MapaFragment();
+        mapaFragment.setArguments(getArguments());
+        getChildFragmentManager().beginTransaction().replace(R.id.mapFragment, mapaFragment).commit();
     }
 
     @Override
@@ -111,7 +120,10 @@ public class CarroFragment extends BaseFragment {
             toast("Compartilhar");
             return true;
         } else if (item.getItemId() == R.id.action_maps) {
-            toast("Mapa");
+            // Abre outra activity para mostrar o mapa
+            Intent intent = new Intent(getContext(), MapaActivity.class);
+            intent.putExtra("carro", Parcels.wrap(mCarro));
+            startActivity(intent);
             return true;
         } else if (item.getItemId() == R.id.action_video) {
             toast("Video");
@@ -128,21 +140,21 @@ public class CarroFragment extends BaseFragment {
     }
 
     // Cria a PopupMenu posicionado na âncora
-    private void showVideo(final String url, View ancoraView){
-        if(url != null && ancoraView != null){
+    private void showVideo(final String url, View ancoraView) {
+        if (url != null && ancoraView != null) {
             // Cria o PopupMenu posicionado na âncora
             PopupMenu popupMenu = new PopupMenu(getActionBar().getThemedContext(), ancoraView);
             popupMenu.inflate(R.menu.menu_popup_video);
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
-                    if(item.getItemId() == R.id.action_video_browser){
+                    if (item.getItemId() == R.id.action_video_browser) {
                         // Abre o vídeo no browser
                         IntentUtils.openBrowser(getContext(), url);
-                    }else if(item.getItemId() == R.id.action_video_player){
+                    } else if (item.getItemId() == R.id.action_video_player) {
                         // Abre o vídeo no player de vídeo nativo
                         IntentUtils.showVideo(getContext(), url);
-                    }else if(item.getItemId() == R.id.action_video_videoview){
+                    } else if (item.getItemId() == R.id.action_video_videoview) {
                         // Abre outra activity com o VideoView
                         Intent intent = new Intent(getContext(), VideoActivity.class);
                         intent.putExtra("carro", Parcels.wrap(mCarro));

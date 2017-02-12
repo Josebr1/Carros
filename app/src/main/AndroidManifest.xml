@@ -6,6 +6,15 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- GPS por hardware -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Obter a localização por wi-fe ou triagulação de antenas -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Mapas V2 depende da OpenGL ES V2 -->
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
 
     <application
         android:name=".CarrosApplication"
@@ -19,6 +28,16 @@
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAIsXIN_WeoIHL90vSTMNolvjwFiuEc6UaXzBiEog" />
+
+        <!-- Google Play Services -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <!-- Chave de acesso (API Key) criando na página de Console -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/API_KEY"/>
 
         <activity
             android:name=".activity.SplashActivity"
@@ -59,9 +78,18 @@
         <activity
             android:name=".activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.NavDrawer" />
-        <activity android:name=".activity.VideoActivity"
+        <activity
+            android:name=".activity.VideoActivity"
             android:parentActivityName=".activity.CarroActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.CarroActivity" />
+        </activity>
+        <activity
+            android:name=".activity.MapaActivity"
+            android:parentActivityName=".activity.CarroActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity.CarroActivity" />
         </activity>
     </application>
